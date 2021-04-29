@@ -9,6 +9,7 @@ import UIKit
 
 extension CGFloat {
     static let spaceAfterTitle: CGFloat = 8
+    static let spaceAfterSubtitle: CGFloat = 2 * padBottom
     static let padLeftRight: CGFloat = 18
     static let padBottom: CGFloat = 32
     static let buttonHeight :CGFloat = 60

@@ -6,10 +6,18 @@
 //
 
 import UIKit
+import SwiftUI
 
 class ConfirmationVC: UIViewController {
     
     private var profile: Profile
+    
+    lazy var titleLabel = CustomTitleLabel(text: Content.confirmation(profile.firstName).title)
+    lazy var subtitleLabel = CustomSubtitleLabel(text: Content.confirmation().subtitle)
+    lazy var webLabel = UnderlineLabel(text: profile.website)
+    lazy var firstNameLabel = UILabel(text: profile.firstName, font: .appBodyFont, textAlignment: .center)
+    lazy var emailLabel = UILabel(text: profile.email, font: .appBodyFont, textAlignment: .center)
+    lazy var signInButton = CustomButton(title: "sign in")
     
     init(_ profile: Profile) {
         self.profile = profile
@@ -20,59 +28,51 @@ class ConfirmationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var titleLabel = CustomTitleLabel(text: "Hello, \(profile.firstName ?? "")")
-    lazy var subtitleLabel = CustomSubtitleLabel(text: "Your super-awesome portfolio has been successfully submitted! The details below will be public within your community!")
-    
-    lazy var webLabel = UnderlineLabel(text: profile.website ?? "")
-    lazy var firstNameLabel = UILabel(text: profile.firstName ?? "", font: .appBodyFont, textAlignment: .center)
-    lazy var emailLabel = UILabel(text: profile.email, font: .appBodyFont, textAlignment: .center)
-    lazy var signInButton = CustomButton(title: "sign in", target: self, action: #selector(signInTapped))
-    
-    @objc func signInTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    var spacer = UIView()
-    
-    var stackView = UIStackView()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
     }
     
     override func viewDidLayoutSubviews() {
-        
-        let profileStackView = UIStackView(arrangedSubviews: [webLabel, firstNameLabel, emailLabel])
-        profileStackView.axis = .vertical
-        profileStackView.spacing = .padLeftRight
-        profileStackView.distribution = .fillEqually
-        
-        let subviews = [titleLabel,
-                        subtitleLabel,
-                        spacer,
-                        signInButton.setHeight(.buttonHeight)
-        ]
-        
-        stackView = UIStackView(arrangedSubviews: subviews)
-        stackView.axis = .vertical
-        stackView.setCustomSpacing(.spaceAfterTitle, after: titleLabel)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = .init(top: .zero, left: .padLeftRight, bottom: .zero, right: .padLeftRight)
-        
-        view.addSubview(stackView)
-        stackView.fillSuperviewSafeAreaLayoutGuide()
-        
-        view.addSubview(profileStackView)
-        profileStackView.centerInSuperview()
-        
-        signInButton.setEnable(true)
-        
+        setupSubViews()
     }
     
+    private func setupSubViews() {
+        setupMainStackView()
+        setupProfileStackView()
+        signInButton.setEnable(true)
+    }
+    
+    private func setupMainStackView() {
+        let subviews = [titleLabel,
+                        subtitleLabel,
+                        UIView(),
+                        signInButton.setHeight(.buttonHeight)]
+        
+        let mainSV = UIStackView(arrangedSubviews: subviews)
+        mainSV.axis = .vertical
+        mainSV.setCustomSpacing(.spaceAfterTitle, after: titleLabel)
+        mainSV.isLayoutMarginsRelativeArrangement = true
+        mainSV.layoutMargins = .init(top: .zero, left: .padLeftRight, bottom: .zero, right: .padLeftRight)
+        
+        view.addSubview(mainSV)
+        mainSV.fillSuperviewSafeAreaLayoutGuide()
+    }
+    
+    private func setupProfileStackView() {
+        let profileSV = UIStackView(arrangedSubviews: [webLabel, firstNameLabel, emailLabel])
+        profileSV.axis = .vertical
+        profileSV.spacing = .padLeftRight
+        profileSV.distribution = .fillEqually
+        view.addSubview(profileSV)
+        profileSV.centerInSuperview()
+        
+        firstNameLabel.isHidden = firstNameLabel.text == nil || firstNameLabel.text == ""
+        webLabel.isHidden = webLabel.text == nil || webLabel.text == ""
+    }
 }
 
-import SwiftUI
+
 
 struct ConfirmationVCPreview: PreviewProvider {
     

@@ -7,16 +7,17 @@
 
 import UIKit
 
-
 class ProfileCreationVC: FormVC {
     
-    lazy var titleLabel = CustomTitleLabel(text: "Profile Creation".capitalized)
-    lazy var subtitleLabel = CustomSubtitleLabel(text: "Use the form below to submit your portfolio. An email and password are required.")
+    lazy var titleLabel = CustomTitleLabel(text: Content.profileCreation.title)
+    lazy var subtitleLabel = CustomSubtitleLabel(text: Content.profileCreation.subtitle)
     
     lazy var firstNameTextField = CustomTextField(.firstname)
     lazy var emailTextField = CustomTextField(.email, target: self, action: #selector(handleTextChange))
     lazy var passwordTextField = CustomTextField(.password, target: self, action: #selector(handleTextChange))
     lazy var websiteTextField = CustomTextField(.website)
+    lazy var spacer = UIView()
+    lazy var submitButton = CustomButton(title: "submit", target: self, action: #selector(submitPressed))
     
     lazy var textFields: [UITextField] = {
         let tfs = [firstNameTextField, emailTextField, passwordTextField, websiteTextField]
@@ -25,7 +26,7 @@ class ProfileCreationVC: FormVC {
         return tfs
     }()
     
-    lazy var textFieldStackView: UIStackView = {
+    lazy var textFieldSV: UIStackView = {
         let sv = UIStackView(arrangedSubviews: textFields)
         sv.axis = .vertical
         sv.spacing = .padLeftRight
@@ -33,15 +34,12 @@ class ProfileCreationVC: FormVC {
         return sv
     }()
     
-    var spacer = UIView()
-    
-    lazy var submitButton = CustomButton(title: "submit", target: self, action: #selector(submitPressed))
+    // MARK: - ViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
-        
         textFields.forEach { $0.delegate = self }
         
         #if DEBUG
@@ -54,19 +52,7 @@ class ProfileCreationVC: FormVC {
     }
     
     override func viewDidLayoutSubviews() {
-        
-        let subviews = [titleLabel,
-                        subtitleLabel,
-                        textFieldStackView.setHeight(.textFieldContainerHeight),
-                        spacer,
-                        submitButton.setHeight(.buttonHeight)
-        ]
-        
-        subviews.forEach { formStackView.addArrangedSubview($0) }
-        
-        formStackView.layoutMargins = .init(top: .zero, left: .padLeftRight, bottom: .zero, right: .padLeftRight)
-        formStackView.setCustomSpacing(.spaceAfterTitle, after: titleLabel)
-        formStackView.setCustomSpacing(.padBottom * 2, after: subtitleLabel)
+        setupSubViews()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -77,47 +63,28 @@ class ProfileCreationVC: FormVC {
         }
     }
     
-    @objc fileprivate func handleTextChange() {
-        let isTextValid: Bool =
-            emailTextField.text?.count ?? 0 != 0 &&
-            passwordTextField.text?.count ?? 0 != 0
+    
+    // MARK: - Subviews
+    
+    private func setupSubViews() {
+        let subviews = [titleLabel,
+                        subtitleLabel,
+                        textFieldSV.setHeight(.textFieldContainerHeight),
+                        spacer,
+                        submitButton.setHeight(.buttonHeight)
+        ]
         
-        submitButton.setEnable(isTextValid)
+        subviews.forEach { formStackView.addArrangedSubview($0) }
+        
+        formStackView.layoutMargins = .init(top: .zero, left: .padLeftRight, bottom: .zero, right: .padLeftRight)
+        formStackView.setCustomSpacing(.spaceAfterTitle, after: titleLabel)
+        formStackView.setCustomSpacing(.spaceAfterSubtitle, after: subtitleLabel)
     }
     
-    func fieldsValidated () -> Bool {
-        
-        if let text = emailTextField.text {
-            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            // a@b.c
-            if trimmed.count < 5 {
-                let okAction: ((UIAlertAction) -> Void) = { _ in self.backToEmailTextField() }
-                showAlert(title: "Invalid Email", message: "You entered an invalid email, please try again.", onOK: okAction)
-                return false
-            }
-        }
-        
-        if let text = passwordTextField.text {
-            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmed.count < 8 {
-                let okAction: ((UIAlertAction) -> Void) = { _ in self.backToPasswordTextField() }
-                showAlert(title: "Password is too short", message: "Password should be at least 8 characters, please try again.", onOK: okAction)
-                return false
-            }
-        }
-        
-        return true
-    }
     
-    private func backToEmailTextField() {
-        emailTextField.becomeFirstResponder()
-    }
+    // MARK: - Actions
     
-    private func backToPasswordTextField() {
-        passwordTextField.becomeFirstResponder()
-    }
-    
-    @objc fileprivate func submitPressed() {
+    @objc func submitPressed() {
         print(#function)
         guard fieldsValidated() else { return }
         submitButton.showLoading()
@@ -134,33 +101,51 @@ class ProfileCreationVC: FormVC {
     @objc fileprivate func handleTapDismiss() {
         view.endEditing(true)
     }
-}
-
-
-extension ProfileCreationVC: UITextFieldDelegate {
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    
+    // MARK: - TextField Functions
+    
+    @objc fileprivate func handleTextChange() {
+        let isTextValid: Bool =
+            emailTextField.text?.count ?? 0 != 0 &&
+            passwordTextField.text?.count ?? 0 != 0
         
-        if textField.returnKeyType == .next && textField.tag != textFields.count - 1 {
-            let nextTag = textField.tag + 1
-            textFields[nextTag].becomeFirstResponder()
-        } else {
-            view.endEditing(true)
-            submitPressed()
+        submitButton.setEnable(isTextValid)
+    }
+    
+    func fieldsValidated () -> Bool {
+        
+        if let text = emailTextField.text {
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            // a@b.c
+            if trimmed.count < .minEmailLength {
+                showAlert(.email) { _ in self.backToEmailTextField() }
+                return false
+            }
+        }
+        
+        if let text = passwordTextField.text {
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.count < .minPasswordLength {
+                showAlert(.password) { _ in self.backToPasswordTextField() }
+                return false
+            }
         }
         
         return true
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if let textField = textField as? CustomTextField {
-            textField.coloring()
-        }
+    private func backToEmailTextField() {
+        emailTextField.becomeFirstResponder()
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if let textField = textField as? CustomTextField {
-            textField.restoreColor()
-        }
+    private func backToPasswordTextField() {
+        passwordTextField.becomeFirstResponder()
     }
+}
+
+
+private extension Int {
+    static let minEmailLength: Int = 5
+    static let minPasswordLength: Int = 8
 }
