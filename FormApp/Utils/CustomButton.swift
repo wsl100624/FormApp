@@ -19,8 +19,8 @@ class CustomButton: UIButton {
         
         setTitle(title.capitalized, for: .normal)
         setTitleColor(.white, for: .normal)
-        backgroundColor = .red
-        titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+        backgroundColor = .systemPink.withAlphaComponent(0.3)
+        titleLabel?.font = .appButtonFont
         layer.cornerRadius = 12
         setEnable(false)
         
@@ -28,6 +28,20 @@ class CustomButton: UIButton {
             addTarget(target, action: action, for: .primaryActionTriggered)
         }
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = bounds
+    }
+    
+    private lazy var gradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.appOrangeColor.cgColor, UIColor.appPinkColor.cgColor]
+        gradientLayer.startPoint = CGPoint(x: -0.2, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 1)
+        gradientLayer.cornerRadius = 12
+        return gradientLayer
+    }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: indicatorStyle)
@@ -55,7 +69,11 @@ class CustomButton: UIButton {
     
     func setEnable(_ enable: Bool) {
         isEnabled = enable
-        backgroundColor = enable ? .red : .red.withAlphaComponent(0.3)
+        if enable {
+            layer.insertSublayer(gradientLayer, at: 0)
+        } else {
+            gradientLayer.removeFromSuperlayer()
+        }
     }
 }
 

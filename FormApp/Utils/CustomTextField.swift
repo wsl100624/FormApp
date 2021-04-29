@@ -15,21 +15,17 @@ class CustomTextField: UITextField {
         placeholderString = type.rawValue.capitalized
         super.init(frame: .zero)
         
-        font = .boldSystemFont(ofSize: 16)
+        font = .appBodyFont
         adjustsFontSizeToFitWidth = true
         textColor = .label
         autocapitalizationType = .none
         autocorrectionType = .no
         borderStyle = .none
-        layer.borderWidth = 1
+        layer.borderWidth = .border
         layer.borderColor = .normalBorderColor
         layer.cornerRadius = .cornorRadius
         
-        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.placeholderColor, .font : UIFont.boldSystemFont(ofSize: 16)])
-    }
-    
-    override var intrinsicContentSize: CGSize {
-        return .init(width: 0, height: 50)
+        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.placeholderColor, .font : UIFont.appBodyFont])
     }
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
@@ -63,15 +59,16 @@ enum TextField: String {
 
 private extension CGColor {
     static let normalBorderColor = UIColor.secondarySystemFill.cgColor
-    static let editingBorderColor = UIColor.red.cgColor
+    static let editingBorderColor = UIColor.appPinkColor.cgColor
 }
 
 private extension UIColor {
     static let placeholderColor = UIColor.secondaryLabel
-    static let editingPlaceholderColor = UIColor.blue
+    static let editingPlaceholderColor = UIColor.appPinkColor
 }
 
 private extension CGFloat {
     static let cornorRadius: CGFloat = 12
     static let padding: CGFloat = 18
+    static let border: CGFloat = 2
 }

@@ -17,8 +17,8 @@ private extension CGFloat {
 
 class ProfileCreationVC: FormVC {
     
-    lazy var titleLabel = UILabel(text: "Profile Creation".capitalized, font: .systemFont(ofSize: 34, weight: .heavy), textColor: .label)
-    lazy var subtitleLabel = UILabel(text: "Use the form below to submit your portfolio. An email and password are required.", font: .systemFont(ofSize: 15, weight: .semibold), textColor: .secondaryLabel, numberOfLines: 0)
+    lazy var titleLabel = UILabel(text: "Profile Creation".capitalized)
+    lazy var subtitleLabel = UILabel(text: "Use the form below to submit your portfolio. An email and password are required.", font: .appSubtitleFont, textColor: .secondaryLabel)
     
     lazy var firstNameTextField: CustomTextField = {
         let tf = CustomTextField(.firstname)
@@ -82,7 +82,7 @@ class ProfileCreationVC: FormVC {
         emailTextField.text = "will@test.com"
         passwordTextField.text = "123123123123"
         websiteTextField.text = "will.wang.com"
-        submitButton.setEnable(true)
+//        submitButton.setEnable(true)
         #endif
     }
     
@@ -111,9 +111,11 @@ class ProfileCreationVC: FormVC {
     }
     
     @objc fileprivate func handleTextChange() {
-        var isFormValid: Bool = true
-        [emailTextField, passwordTextField].forEach { isFormValid = $0.text?.count ?? 0 != 0 }
-        submitButton.setEnable(isFormValid)
+        let isTextValid: Bool =
+            emailTextField.text?.count ?? 0 != 0 &&
+            passwordTextField.text?.count ?? 0 != 0
+        
+        submitButton.setEnable(isTextValid)
     }
     
     func fieldsValidated () -> Bool {

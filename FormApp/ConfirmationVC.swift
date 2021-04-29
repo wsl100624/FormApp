@@ -28,12 +28,12 @@ class ConfirmationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var titleLabel = UILabel(text: "Hello, \(profile.firstName ?? "")", font: .systemFont(ofSize: 34, weight: .heavy), textColor: .label)
-    lazy var subtitleLabel = UILabel(text: "Your super-awesome portfolio has been successfully submitted! The details below will be public within your community!", font: .systemFont(ofSize: 15, weight: .semibold), textColor: .secondaryLabel, numberOfLines: 0)
+    lazy var titleLabel = UILabel(text: "Hello, \(profile.firstName ?? "")")
+    lazy var subtitleLabel = UILabel(text: "Your super-awesome portfolio has been successfully submitted! The details below will be public within your community!", font: .appSubtitleFont, textColor: .secondaryLabel)
     
     lazy var webLabel = UILabel(text: profile.website ?? "", textAlignment: .center)
-    lazy var firstNameLabel = UILabel(text: profile.firstName ?? "", font: .boldSystemFont(ofSize: 16), textColor: .label, textAlignment: .center)
-    lazy var emailLabel = UILabel(text: profile.email, font: .boldSystemFont(ofSize: 16), textColor: .label, textAlignment: .center)
+    lazy var firstNameLabel = UILabel(text: profile.firstName ?? "", font: .appBodyFont, textAlignment: .center)
+    lazy var emailLabel = UILabel(text: profile.email, font: .appBodyFont, textAlignment: .center)
     lazy var signInButton = CustomButton(title: "sign in", target: self, action: #selector(signInTapped))
     
     @objc func signInTapped() {
