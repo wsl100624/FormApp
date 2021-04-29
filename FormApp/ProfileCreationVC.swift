@@ -7,49 +7,16 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let spaceAfterTitle: CGFloat = 8
-    static let padLeftRight: CGFloat = 18
-    static let padBottom: CGFloat = 32
-    static let buttonHeight :CGFloat = 60
-    static let textFieldContainerHeight: CGFloat = 4 * buttonHeight + 3 * padLeftRight
-}
 
 class ProfileCreationVC: FormVC {
     
-    lazy var titleLabel = UILabel(text: "Profile Creation".capitalized)
-    lazy var subtitleLabel = UILabel(text: "Use the form below to submit your portfolio. An email and password are required.", font: .appSubtitleFont, textColor: .secondaryLabel)
+    lazy var titleLabel = CustomTitleLabel(text: "Profile Creation".capitalized)
+    lazy var subtitleLabel = CustomSubtitleLabel(text: "Use the form below to submit your portfolio. An email and password are required.")
     
-    lazy var firstNameTextField: CustomTextField = {
-        let tf = CustomTextField(.firstname)
-        tf.returnKeyType = .next
-        tf.autocapitalizationType = .words
-        return tf
-    }()
-    
-    lazy var emailTextField: CustomTextField = {
-        let tf = CustomTextField(.email)
-        tf.returnKeyType = .next
-        tf.keyboardType = .emailAddress
-        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
-        return tf
-    }()
-    
-    
-    lazy var passwordTextField: CustomTextField = {
-        let tf = CustomTextField(.password)
-        tf.returnKeyType = .next
-        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
-        tf.isSecureTextEntry = true
-        return tf
-    }()
-    
-    lazy var websiteTextField: CustomTextField = {
-        let tf = CustomTextField(.website)
-        tf.returnKeyType = .done
-        tf.keyboardType = .URL
-        return tf
-    }()
+    lazy var firstNameTextField = CustomTextField(.firstname)
+    lazy var emailTextField = CustomTextField(.email, target: self, action: #selector(handleTextChange))
+    lazy var passwordTextField = CustomTextField(.password, target: self, action: #selector(handleTextChange))
+    lazy var websiteTextField = CustomTextField(.website)
     
     lazy var textFields: [UITextField] = {
         let tfs = [firstNameTextField, emailTextField, passwordTextField, websiteTextField]
@@ -82,7 +49,7 @@ class ProfileCreationVC: FormVC {
         emailTextField.text = "will@test.com"
         passwordTextField.text = "123123123123"
         websiteTextField.text = "will.wang.com"
-//        submitButton.setEnable(true)
+        submitButton.setEnable(true)
         #endif
     }
     
@@ -158,8 +125,6 @@ class ProfileCreationVC: FormVC {
         // Checked email and password text, so we are good to use ! here.
         let profileInfo = Profile(email: emailTextField.text!, password: passwordTextField.text!, firstName: firstNameTextField.text, website: websiteTextField.text)
         
-        print(profileInfo)
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.submitButton.hideLoading()
             self.navigationController?.pushViewController(ConfirmationVC(profileInfo), animated: true)
@@ -175,8 +140,6 @@ class ProfileCreationVC: FormVC {
 extension ProfileCreationVC: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        self.resignFirstResponder()
         
         if textField.returnKeyType == .next && textField.tag != textFields.count - 1 {
             let nextTag = textField.tag + 1

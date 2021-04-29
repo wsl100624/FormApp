@@ -11,7 +11,7 @@ import UIKit
 class CustomTextField: UITextField {
     let placeholderString: String
     
-    init(_ type: TextField) {
+    init(_ type: TextField, target: Any? = nil, action: Selector? = nil) {
         placeholderString = type.rawValue.capitalized
         super.init(frame: .zero)
         
@@ -26,6 +26,26 @@ class CustomTextField: UITextField {
         layer.cornerRadius = .cornorRadius
         
         attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.placeholderColor, .font : UIFont.appBodyFont])
+        
+        switch type {
+        
+        case .firstname:
+            returnKeyType = .next
+            autocapitalizationType = .words
+        case .email:
+            returnKeyType = .next
+            keyboardType = .emailAddress
+        case .password:
+            returnKeyType = .next
+            isSecureTextEntry = true
+        case .website:
+            returnKeyType = .done
+            keyboardType = .URL
+        }
+        
+        if let action = action {
+            addTarget(target, action: action, for: .editingChanged)
+        }
     }
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {

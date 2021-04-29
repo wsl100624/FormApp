@@ -7,14 +7,6 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let spaceAfterTitle: CGFloat = 8
-    static let padLeftRight: CGFloat = 18
-    static let padBottom: CGFloat = 32
-    static let buttonHeight :CGFloat = 60
-    static let textFieldContainerHeight: CGFloat = 4 * buttonHeight + 3 * padLeftRight
-}
-
 class ConfirmationVC: UIViewController {
     
     private var profile: Profile
@@ -28,10 +20,10 @@ class ConfirmationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var titleLabel = UILabel(text: "Hello, \(profile.firstName ?? "")")
-    lazy var subtitleLabel = UILabel(text: "Your super-awesome portfolio has been successfully submitted! The details below will be public within your community!", font: .appSubtitleFont, textColor: .secondaryLabel)
+    lazy var titleLabel = CustomTitleLabel(text: "Hello, \(profile.firstName ?? "")")
+    lazy var subtitleLabel = CustomSubtitleLabel(text: "Your super-awesome portfolio has been successfully submitted! The details below will be public within your community!")
     
-    lazy var webLabel = UILabel(text: profile.website ?? "", textAlignment: .center)
+    lazy var webLabel = UnderlineLabel(text: profile.website ?? "")
     lazy var firstNameLabel = UILabel(text: profile.firstName ?? "", font: .appBodyFont, textAlignment: .center)
     lazy var emailLabel = UILabel(text: profile.email, font: .appBodyFont, textAlignment: .center)
     lazy var signInButton = CustomButton(title: "sign in", target: self, action: #selector(signInTapped))
