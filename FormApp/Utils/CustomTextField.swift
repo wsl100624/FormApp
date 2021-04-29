@@ -16,6 +16,7 @@ class CustomTextField: UITextField {
         super.init(frame: .zero)
         
         font = .boldSystemFont(ofSize: 16)
+        adjustsFontSizeToFitWidth = true
         textColor = .label
         autocapitalizationType = .none
         autocorrectionType = .no

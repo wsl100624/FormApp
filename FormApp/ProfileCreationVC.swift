@@ -76,6 +76,7 @@ class ProfileCreationVC: FormVC {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         textFields.forEach { $0.delegate = self }
+        rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
     }
     
     override func viewDidLayoutSubviews() {
@@ -116,6 +117,10 @@ class ProfileCreationVC: FormVC {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.submitButton.hideLoading()
         }
+    }
+    
+    @objc fileprivate func handleTapDismiss() {
+        view.endEditing(true)
     }
 }
 
