@@ -14,7 +14,7 @@ class CustomButton: UIButton {
     var indicatorStyle: UIActivityIndicatorView.Style = .medium
     private var originalTitleColor: UIColor = .white
     
-    convenience init(title: String) {
+    convenience init(title: String, target: Any? = nil, action: Selector? = nil) {
         self.init(type: .system)
         
         setTitle(title.capitalized, for: .normal)
@@ -23,6 +23,10 @@ class CustomButton: UIButton {
         backgroundColor = .red
         titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
         layer.cornerRadius = 12
+        
+        if let action = action {
+            addTarget(target, action: action, for: .primaryActionTriggered)
+        }
     }
     
     private lazy var activityIndicator: UIActivityIndicatorView = {

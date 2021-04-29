@@ -21,10 +21,10 @@ class CustomTextField: UITextField {
         autocorrectionType = .no
         borderStyle = .none
         layer.borderWidth = 1
-        layer.borderColor = UIColor.secondarySystemFill.cgColor
-        layer.cornerRadius = 12
+        layer.borderColor = .normalBorderColor
+        layer.cornerRadius = .cornorRadius
         
-        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.secondaryLabel, .font : UIFont.boldSystemFont(ofSize: 16)])
+        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.placeholderColor, .font : UIFont.boldSystemFont(ofSize: 16)])
     }
     
     override var intrinsicContentSize: CGSize {
@@ -36,6 +36,16 @@ class CustomTextField: UITextField {
     }
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.insetBy(dx: .padding, dy: 0)
+    }
+    
+    func coloring() {
+        layer.borderColor = .editingBorderColor
+        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.editingPlaceholderColor])
+    }
+    
+    func restoreColor() {
+        layer.borderColor = .normalBorderColor
+        attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : UIColor.placeholderColor])
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,6 +60,17 @@ enum TextField: String {
     case website
 }
 
+private extension CGColor {
+    static let normalBorderColor = UIColor.secondarySystemFill.cgColor
+    static let editingBorderColor = UIColor.red.cgColor
+}
+
+private extension UIColor {
+    static let placeholderColor = UIColor.secondaryLabel
+    static let editingPlaceholderColor = UIColor.blue
+}
+
 private extension CGFloat {
+    static let cornorRadius: CGFloat = 12
     static let padding: CGFloat = 18
 }
