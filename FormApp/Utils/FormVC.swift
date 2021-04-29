@@ -18,6 +18,7 @@ open class FormVC: UIViewController {
         sv.contentInsetAdjustmentBehavior = .never
         sv.contentSize = view.frame.size
         sv.keyboardDismissMode = .interactive
+        sv.alwaysBounceVertical = true
         sv.showsVerticalScrollIndicator = false
         return sv
     }()
@@ -31,7 +32,7 @@ open class FormVC: UIViewController {
     
     var lastItem: UIView!
     
-    lazy fileprivate var distanceToBottom = distanceFromLastItemToBottom()
+    lazy var distanceToBottom = distanceFromLastItemToBottom()
     
     // MARK: - Init
     
