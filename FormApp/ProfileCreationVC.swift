@@ -39,16 +39,8 @@ class ProfileCreationVC: FormVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
-        textFields.forEach { $0.delegate = self }
-        
-        #if DEBUG
-        firstNameTextField.text = "Will"
-        emailTextField.text = "will@test.com"
-        passwordTextField.text = "123123123123"
-        websiteTextField.text = "will.wang.com"
-        submitButton.setEnable(true)
-        #endif
+        addTapGesture()
+        addTextFieldDelegate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -65,6 +57,14 @@ class ProfileCreationVC: FormVC {
     
     
     // MARK: - Subviews
+    
+    fileprivate func addTapGesture() {
+        rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
+    }
+    
+    fileprivate func addTextFieldDelegate() {
+        textFields.forEach { $0.delegate = self }
+    }
     
     private func setupSubViews() {
         let subviews = [titleLabel,
