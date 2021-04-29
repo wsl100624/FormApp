@@ -145,6 +145,11 @@ class ProfileCreationVC: FormVC {
         guard fieldsValidated() else { return }
         submitButton.showLoading()
         
+        // Checked email and password text, so we are good to use ! here.
+        let profileInfo = ProfileInfo(email: emailTextField.text!, password: passwordTextField.text!, firstName: firstNameTextField.text, website: websiteTextField.text)
+        
+        print(profileInfo)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.submitButton.hideLoading()
         }
