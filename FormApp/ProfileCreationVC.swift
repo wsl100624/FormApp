@@ -76,6 +76,14 @@ class ProfileCreationVC: FormVC {
         rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
         
         textFields.forEach { $0.delegate = self }
+        
+        #if DEBUG
+        firstNameTextField.text = "Will"
+        emailTextField.text = "will@test.com"
+        passwordTextField.text = "123123123123"
+        websiteTextField.text = "will.wang.com"
+        submitButton.setEnable(true)
+        #endif
     }
     
     override func viewDidLayoutSubviews() {
@@ -146,12 +154,13 @@ class ProfileCreationVC: FormVC {
         submitButton.showLoading()
         
         // Checked email and password text, so we are good to use ! here.
-        let profileInfo = ProfileInfo(email: emailTextField.text!, password: passwordTextField.text!, firstName: firstNameTextField.text, website: websiteTextField.text)
+        let profileInfo = Profile(email: emailTextField.text!, password: passwordTextField.text!, firstName: firstNameTextField.text, website: websiteTextField.text)
         
         print(profileInfo)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.submitButton.hideLoading()
+            self.navigationController?.pushViewController(ConfirmationVC(profileInfo), animated: true)
         }
     }
     
