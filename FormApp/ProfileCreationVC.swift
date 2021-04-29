@@ -24,7 +24,6 @@ class ProfileCreationVC: FormVC {
         let tf = CustomTextField(.firstname)
         tf.returnKeyType = .next
         tf.autocapitalizationType = .words
-        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         return tf
     }()
     
@@ -49,7 +48,6 @@ class ProfileCreationVC: FormVC {
         let tf = CustomTextField(.website)
         tf.returnKeyType = .done
         tf.keyboardType = .URL
-        tf.addTarget(self, action: #selector(handleTextChange), for: .editingChanged)
         return tf
     }()
     
@@ -75,8 +73,9 @@ class ProfileCreationVC: FormVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        textFields.forEach { $0.delegate = self }
         rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
+        
+        textFields.forEach { $0.delegate = self }
     }
     
     override func viewDidLayoutSubviews() {
@@ -95,7 +94,6 @@ class ProfileCreationVC: FormVC {
         formStackView.setCustomSpacing(.padBottom * 2, after: subtitleLabel)
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -106,12 +104,45 @@ class ProfileCreationVC: FormVC {
     
     @objc fileprivate func handleTextChange() {
         var isFormValid: Bool = true
-        textFields.forEach { isFormValid = $0.text?.count ?? 0 != 0 }
+        [emailTextField, passwordTextField].forEach { isFormValid = $0.text?.count ?? 0 != 0 }
+        submitButton.setEnable(isFormValid)
+    }
+    
+    func fieldsValidated () -> Bool {
+        
+        if let text = emailTextField.text {
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            // a@b.c
+            if trimmed.count < 5 {
+                let okAction: ((UIAlertAction) -> Void) = { _ in self.backToEmailTextField() }
+                showAlert(title: "Invalid Email", message: "You entered an invalid email, please try again.", onOK: okAction)
+                return false
+            }
+        }
+        
+        if let text = passwordTextField.text {
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.count < 8 {
+                let okAction: ((UIAlertAction) -> Void) = { _ in self.backToPasswordTextField() }
+                showAlert(title: "Password is too short", message: "Password should be at least 8 characters, please try again.", onOK: okAction)
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    private func backToEmailTextField() {
+        emailTextField.becomeFirstResponder()
+    }
+    
+    private func backToPasswordTextField() {
+        passwordTextField.becomeFirstResponder()
     }
     
     @objc fileprivate func submitPressed() {
         print(#function)
-        
+        guard fieldsValidated() else { return }
         submitButton.showLoading()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

@@ -19,10 +19,10 @@ class CustomButton: UIButton {
         
         setTitle(title.capitalized, for: .normal)
         setTitleColor(.white, for: .normal)
-        setTitleColor(.secondaryLabel, for: .disabled)
         backgroundColor = .red
         titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
         layer.cornerRadius = 12
+        setEnable(false)
         
         if let action = action {
             addTarget(target, action: action, for: .primaryActionTriggered)
@@ -51,6 +51,11 @@ class CustomButton: UIButton {
             self.activityIndicator.stopAnimating()
             self.activityIndicator.removeFromSuperview()
         }
+    }
+    
+    func setEnable(_ enable: Bool) {
+        isEnabled = enable
+        backgroundColor = enable ? .red : .red.withAlphaComponent(0.3)
     }
 }
 
