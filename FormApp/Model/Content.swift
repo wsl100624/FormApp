@@ -39,6 +39,7 @@ enum Content {
 enum Alert {
     case email
     case password
+    case url
     
     var title: String {
         switch self {
@@ -46,6 +47,8 @@ enum Alert {
             return "invalid email".capitalized
         case .password:
             return "Password is too short"
+        case .url:
+            return "invalid web address".capitalized
         }
     }
     
@@ -55,6 +58,8 @@ enum Alert {
             return "You entered an invalid email, please try again."
         case .password:
             return "Password should be at least 8 characters, please try again."
+        case .url:
+            return "You entered an invalid web address, please try again or leave it blank."
         }
     }
 }

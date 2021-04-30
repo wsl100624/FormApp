@@ -11,7 +11,6 @@ class ProfileCreationVC: FormVC {
     
     lazy var titleLabel = CustomTitleLabel(text: Content.profileCreation.title)
     lazy var subtitleLabel = CustomSubtitleLabel(text: Content.profileCreation.subtitle)
-    
     lazy var firstNameTextField = CustomTextField(.firstname)
     lazy var emailTextField = CustomTextField(.email, target: self, action: #selector(handleTextChange))
     lazy var passwordTextField = CustomTextField(.password, target: self, action: #selector(handleTextChange))
@@ -139,15 +138,30 @@ class ProfileCreationVC: FormVC {
             }
         }
         
+        if let text = websiteTextField.text {
+            let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isValidURL() {
+                showAlert(.url) { _ in self.backToWebsiteTextField() }
+                return false
+            }
+        }
+        
         return true
     }
     
     private func backToEmailTextField() {
+        emailTextField.text = nil
         emailTextField.becomeFirstResponder()
     }
     
     private func backToPasswordTextField() {
+        passwordTextField.text = nil
         passwordTextField.becomeFirstResponder()
+    }
+    
+    private func backToWebsiteTextField() {
+        websiteTextField.text = nil
+        websiteTextField.becomeFirstResponder()
     }
 }
 

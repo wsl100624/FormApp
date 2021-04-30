@@ -74,7 +74,7 @@ enum TextField: String {
     case firstname = "first name"
     case email = "email address"
     case password
-    case website
+    case website = "personal website"
 }
 
 private extension CGColor {
