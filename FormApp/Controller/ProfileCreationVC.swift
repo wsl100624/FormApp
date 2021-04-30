@@ -140,7 +140,7 @@ class ProfileCreationVC: FormVC {
         
         if let text = websiteTextField.text {
             let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmed.isValidURL() {
+            if trimmed.count > .minUrlLength && !trimmed.isValidURL() {
                 showAlert(.url) { _ in self.backToWebsiteTextField() }
                 return false
             }
@@ -169,4 +169,5 @@ class ProfileCreationVC: FormVC {
 private extension Int {
     static let minEmailLength: Int = 5
     static let minPasswordLength: Int = 8
+    static let minUrlLength: Int = 1
 }

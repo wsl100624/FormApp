@@ -18,7 +18,6 @@ class CustomButton: UIButton {
         self.init(type: .system)
         
         setTitle(title.capitalized, for: .normal)
-        setTitleColor(.white, for: .normal)
         backgroundColor = .systemPink.withAlphaComponent(0.3)
         titleLabel?.font = .appButtonFont
         layer.cornerRadius = 12
@@ -70,8 +69,10 @@ class CustomButton: UIButton {
     func setEnable(_ enable: Bool) {
         isEnabled = enable
         if enable {
+            setTitleColor(.white, for: .normal)
             layer.insertSublayer(gradientLayer, at: 0)
         } else {
+            setTitleColor(.secondarySystemFill, for: .normal)
             gradientLayer.removeFromSuperlayer()
         }
     }
