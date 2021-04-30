@@ -8,6 +8,9 @@
 import Foundation
 
 
+// Decision: - Add all text content here
+// Benefit: - separate hardcoded string from controller. It's easy to maintain as content might be changed very often.
+
 enum Content {
     
     case profileCreation

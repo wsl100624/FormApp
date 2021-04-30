@@ -7,6 +7,9 @@
 
 import UIKit
 
+// Decision: - Use this self-created extension to utilize auto layout for UIView.
+// Benefit: - remove boiler auto layout code.
+
 public struct ViewConstraints {
     public var top, leading, bottom, trailing, width, height: NSLayoutConstraint?
 }

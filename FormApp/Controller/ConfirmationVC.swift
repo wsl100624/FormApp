@@ -21,6 +21,8 @@ class ConfirmationVC: UIViewController {
     
     // MARK: - Init
     
+    // Decision: - Inject profile model
+    // Benefit: - to make sure this screen can be presented with valid data
     init(_ profile: Profile) {
         self.profile = profile
         super.init(nibName: nil, bundle: nil)
@@ -49,7 +51,13 @@ class ConfirmationVC: UIViewController {
         signInButton.setEnable(true)
     }
     
+    // Decision: - Use stack view to rendering the subviews
+    // Benefit: - it's easy to use, able to cut off a bunch of auto layout code, and easy to maintain.
     private func setupMainStackView() {
+        
+        
+        // Decision: - Add a spacer-like UIView here
+        // Benefit: - it can expand and fill the blank space, so that the subviews can snap on the tap/bottom.
         let subviews = [titleLabel,
                         subtitleLabel,
                         UIView(),
@@ -73,6 +81,8 @@ class ConfirmationVC: UIViewController {
         view.addSubview(profileSV)
         profileSV.centerInSuperview()
         
+        // Decision: - hide empty labels
+        // Benefit: - because they're in stackview, hiding it will shrink the stackview, so it can still at the center of the screen.
         firstNameLabel.isHidden = firstNameLabel.text == nil || firstNameLabel.text == ""
         webLabel.isHidden = webLabel.text == nil || webLabel.text == ""
     }

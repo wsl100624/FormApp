@@ -7,6 +7,9 @@
 
 import UIKit
 
+// Decision: - make custom title label
+// Benefit: - so it can be used throughout the project. we can also remove boiler code from controllers.
+
 class CustomTitleLabel: UILabel {
     
     convenience init(text: String?) {

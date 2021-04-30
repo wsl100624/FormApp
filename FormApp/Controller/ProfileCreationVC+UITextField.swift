@@ -10,6 +10,8 @@ import UIKit
 
 extension ProfileCreationVC: UITextFieldDelegate {
     
+    // Decision: - press retrun key should bring user to next textfield, press the last return key should submit form for user.
+    // Benefit: - it's essentiall feature in forms, but i didn't use tool bar because of the small number of textfields in this project
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         if textField.returnKeyType == .next && textField.tag != textFields.count - 1 {

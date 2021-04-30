@@ -70,12 +70,8 @@ class CustomTextField: UITextField {
     }
 }
 
-enum TextField: String {
-    case firstname = "first name"
-    case email = "email address"
-    case password
-    case website = "personal website"
-}
+// Decision: - make static but private constants
+// Benefit: - it can only use in here. It's handy and able to separate hardcoded numbers from views.
 
 private extension CGColor {
     static let normalBorderColor = UIColor.secondarySystemFill.cgColor
