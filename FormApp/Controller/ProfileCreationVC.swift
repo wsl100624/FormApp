@@ -34,12 +34,12 @@ class ProfileCreationVC: FormVC {
         return sv
     }()
     
+    
     // MARK: - ViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        addTapGesture()
         addTextFieldDelegate()
     }
     
@@ -57,10 +57,6 @@ class ProfileCreationVC: FormVC {
     
     
     // MARK: - Subviews
-    
-    fileprivate func addTapGesture() {
-        rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
-    }
     
     fileprivate func addTextFieldDelegate() {
         textFields.forEach { $0.delegate = self }
@@ -85,23 +81,34 @@ class ProfileCreationVC: FormVC {
     // MARK: - Actions
     
     @objc func submitPressed() {
-        print(#function)
-        guard fieldsValidated() else { return }
-        submitButton.showLoading()
+        animateTap()
         
+        guard fieldsValidated() else {
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            return
+        }
+        
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        submitButton.showLoading()
+
         // Checked email and password text, so we are good to use ! here.
         let profileInfo = Profile(email: emailTextField.text!, password: passwordTextField.text!, firstName: firstNameTextField.text, website: websiteTextField.text)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.submitButton.hideLoading()
             self.navigationController?.pushViewController(ConfirmationVC(profileInfo), animated: true)
         }
     }
     
-    @objc fileprivate func handleTapDismiss() {
-        view.endEditing(true)
+    private func animateTap() {
+        UIButton.animate(withDuration: 0.1, animations: {
+            self.submitButton.transform = .init(scaleX: 0.97, y: 0.97)
+        }, completion: { _ in
+            UIButton.animate(withDuration: 0.1, animations: {
+                self.submitButton.transform = .identity
+            })
+        })
     }
-    
     
     // MARK: - TextField Functions
     

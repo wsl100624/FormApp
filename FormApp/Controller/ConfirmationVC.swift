@@ -17,7 +17,9 @@ class ConfirmationVC: UIViewController {
     lazy var webLabel = UnderlineLabel(text: profile.website)
     lazy var firstNameLabel = UILabel(text: profile.firstName, font: .appBodyFont, textAlignment: .center)
     lazy var emailLabel = UILabel(text: profile.email, font: .appBodyFont, textAlignment: .center)
-    lazy var signInButton = CustomButton(title: "sign in")
+    lazy var signInButton = CustomButton(title: "sign in", target: self, action: #selector(signInPressed))
+    
+    // MARK: - Init
     
     init(_ profile: Profile) {
         self.profile = profile
@@ -28,6 +30,8 @@ class ConfirmationVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View Controller Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -36,6 +40,8 @@ class ConfirmationVC: UIViewController {
     override func viewDidLayoutSubviews() {
         setupSubViews()
     }
+    
+    // MARK: - Subviews
     
     private func setupSubViews() {
         setupMainStackView()
@@ -69,6 +75,23 @@ class ConfirmationVC: UIViewController {
         
         firstNameLabel.isHidden = firstNameLabel.text == nil || firstNameLabel.text == ""
         webLabel.isHidden = webLabel.text == nil || webLabel.text == ""
+    }
+    
+    // MARK: - Actions
+    
+    @objc private func signInPressed() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        animateTap()
+    }
+    
+    private func animateTap() {
+        UIButton.animate(withDuration: 0.1, animations: {
+            self.signInButton.transform = .init(scaleX: 0.97, y: 0.97)
+        }, completion: { _ in
+            UIButton.animate(withDuration: 0.1, animations: {
+                self.signInButton.transform = .identity
+            })
+        })
     }
 }
 

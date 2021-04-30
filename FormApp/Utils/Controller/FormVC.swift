@@ -48,27 +48,35 @@ open class FormVC: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.addSubview(rootScrollView)
-        rootScrollView.fillSuperview()
-        rootScrollView.addSubview(formStackView)
-        
-        formStackView.anchor(top: rootScrollView.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
-        
+        setupRootScrollView()
+        setupFormStackView()
         setupKeyboardNotifications()
     }
     
     override open func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if formStackView.frame.height > view.frame.height {
-            rootScrollView.contentSize.height = formStackView.frame.size.height
-        }
-        
+        extendContentSizeIfNeeded()
         _ = distanceToBottom
     }
     
-    // MARK: - Misc
+    // MARK: - Subviews
+    
+    fileprivate func setupRootScrollView() {
+        view.addSubview(rootScrollView)
+        rootScrollView.fillSuperview()
+        rootScrollView.addSubview(formStackView)
+        rootScrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapDismiss)))
+    }
+    
+    fileprivate func setupFormStackView() {
+        formStackView.anchor(top: rootScrollView.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor)
+    }
+    
+    fileprivate func extendContentSizeIfNeeded() {
+        if formStackView.frame.height > view.frame.height {
+            rootScrollView.contentSize.height = formStackView.frame.size.height
+        }
+    }
     
     fileprivate func distanceFromLastItemToBottom() -> CGFloat {
         if lastItem != nil {
@@ -82,6 +90,10 @@ open class FormVC: UIViewController {
     
     
     // MARK: - Keyboard Management
+    
+    @objc fileprivate func handleTapDismiss() {
+        view.endEditing(true)
+    }
     
     fileprivate func setupKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -97,13 +109,10 @@ open class FormVC: UIViewController {
         if distanceToBottom > 0 {
             rootScrollView.contentInset.bottom -= distanceToBottom
         }
-        
-        rootScrollView.verticalScrollIndicatorInsets.bottom = keyboardFrame.height
     }
     
     @objc fileprivate func handleKeyboardHide() {
         rootScrollView.contentInset.bottom = 0
-        rootScrollView.verticalScrollIndicatorInsets.bottom = 0
     }
     
     deinit {
