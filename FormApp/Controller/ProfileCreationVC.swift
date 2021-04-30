@@ -125,7 +125,7 @@ class ProfileCreationVC: FormVC {
         if let text = emailTextField.text {
             let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
             // a@b.c
-            if trimmed.count < .minEmailLength {
+            if trimmed.count < .minEmailLength || !trimmed.isValidEmail() {
                 showAlert(.email) { _ in self.backToEmailTextField() }
                 return false
             }
