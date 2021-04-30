@@ -9,6 +9,9 @@ import UIKit
 
 extension UIFont {
     
+    // Decision: - Use dynamic font
+    // Benefit: - sometimes user can enlarge the texts in theirs phone settings, if we use preferred font, the layout will be adapt the bigger/smaller fonts.
+    
     static let appTitleFont = UIFont.preferredFont(for: .largeTitle, weight: .heavy)
     static let appBodyFont = UIFont.preferredFont(for: .body, weight: .semibold)
     static let appSubtitleFont = UIFont.preferredFont(for: .callout, weight: .semibold)

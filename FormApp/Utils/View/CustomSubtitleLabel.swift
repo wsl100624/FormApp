@@ -22,6 +22,9 @@ class CustomTitleLabel: UILabel {
     }
 }
 
+// Decision: - Use system provided label color
+// Benefit: - support dark mode, which is a must have feature as only 8% devices not updated to ios 13+ yet
+
 class CustomSubtitleLabel: UILabel {
     
     convenience init(text: String?) {
